@@ -13,8 +13,8 @@ public class DiningTable {
     private int id;
     @Column(name = "table_id")
     private String tableId;
-    @Column(name = "num_seat")
-    private int numSeat;
+    @Column(name = "seat_id")
+    private String seatId;
     @Column(name = "booked")
     private boolean booked;
 }
