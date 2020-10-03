@@ -3,11 +3,12 @@ package com.cr.reservation.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.persistence.Table;
 
 @Data
 @Entity
-@Table(name="dining_table")
-public class DiningTable {
+@Table(name="table_seat")
+public class TableSeat {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -17,4 +18,8 @@ public class DiningTable {
     private String seatId;
     @Column(name = "booked")
     private boolean booked;
+
+    public TableSeat() {
+
+    }
 }
