@@ -8,16 +8,17 @@ import lombok.Data;
 @JsonPropertyOrder({"seat_id", "availale"})
 @JsonInclude(JsonInclude.Include.ALWAYS)
 public class SeatDTO {
-    @JsonProperty("seat_id")
-    private String seatId;
 
-    @JsonProperty("availale")
-    private boolean availale;
+  @JsonProperty("seat_id")
+  private String seatId;
 
-    @JsonCreator
-    public SeatDTO(
-            @JsonProperty("seat_id") String seatId, @JsonProperty("availale") boolean available) {
-        this.seatId = seatId;
-        this.availale = available;
-    }
+  @JsonProperty("availale")
+  private boolean availale;
+
+  @JsonCreator
+  public SeatDTO(
+      @JsonProperty("seat_id") String seatId, @JsonProperty("availale") boolean available) {
+    this.seatId = seatId;
+    this.availale = available;
+  }
 }

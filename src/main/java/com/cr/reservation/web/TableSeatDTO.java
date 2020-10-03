@@ -11,16 +11,16 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TableSeatDTO {
 
-    @JsonProperty("table_id")
-    private String tableId;
-    @JsonProperty("seat_id")
-    private String seatId;
+  @JsonProperty("table_id")
+  private String tableId;
+  @JsonProperty("seat_id")
+  private String seatId;
 
-    @JsonCreator
-    public TableSeatDTO(
-            @JsonProperty("table_id") String tableId,
-            @JsonProperty("seat_id") String seatId) {
-        this.tableId = tableId;
-        this.seatId = seatId;
-    }
+  @JsonCreator
+  public TableSeatDTO(
+      @JsonProperty("table_id") String tableId,
+      @JsonProperty("seat_id") String seatId) {
+    this.tableId = tableId;
+    this.seatId = seatId;
+  }
 }

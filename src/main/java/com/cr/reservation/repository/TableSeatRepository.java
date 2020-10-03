@@ -9,11 +9,11 @@ import java.util.List;
 @Repository
 public interface TableSeatRepository extends CrudRepository<TableSeat, Integer> {
 
-    List<TableSeat> findByTableId(String tableId);
+  List<TableSeat> findByTableId(String tableId);
 
-    TableSeat findByTableIdAndSeatId(String tableId, String seatId);
+  TableSeat findByTableIdAndSeatId(String tableId, String seatId);
 
-    List<TableSeat> findByBooked(boolean booked);
+  List<TableSeat> findByBooked(boolean booked);
 
-    List<TableSeat> findAll();
+  List<TableSeat> findAll();
 }

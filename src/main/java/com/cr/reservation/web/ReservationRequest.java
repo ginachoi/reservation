@@ -10,12 +10,13 @@ import java.util.List;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ReservationRequest {
-    @JsonProperty("customer_name")
-    private String cutomerName;
 
-    @JsonProperty("reservation_type")
-    private ReservationType reservationType;
+  @JsonProperty("customer_name")
+  private String cutomerName;
 
-    @JsonProperty("reservations")
-    private List<List<TableSeatDTO>> reservations;
+  @JsonProperty("reservation_type")
+  private ReservationType reservationType;
+
+  @JsonProperty("reservations")
+  private List<List<TableSeatDTO>> reservations;
 }
