@@ -1,7 +1,7 @@
 # ReservationService
 The reservation service helps both owner and customer to make reservations.
 * A restaurant has 4 tables of capacity 1,2,3 and 4 seats
-* Two reservations can be made at the same time of multiple seating capacities
+* Two reservations can be made at the same time of multiple seating capacities. Cannot make more than two reservations.
 * No single reservation can be greater than 10 people
 * No waitlist - successful reservation or failed reservation are the only 2 states possible
 * Customer and Owner are the only 2 people who will use this API
@@ -204,17 +204,146 @@ Response body:
     }
 ]
 ```
-#### Cancel a reservation
+#### Try to make three reservations will fail
 ##### Request
 ```bash
-HTTP Method: DELETE
-URL: http://localhost:8088/reservation/v1/reservations/1
+HTTP Method: POST
+URL: http:http://localhost:8088/reservation/v1/reservations
+Request body:
+{
+   "customer_name":"Suhas",
+   "reservation_type":"OWNER",
+   "reservations":[
+      [
+         {
+            "table_id":"1",
+            "seat_id":"1"
+         }
+      ],
+      [
+         {
+            "table_id":"2",
+            "seat_id":"1"
+         }
+      ],
+      [
+         {
+            "table_id":"3",
+            "seat_id":"1"
+         }
+      ]      
+   ]
+}
+```
+#### Response
+```bash
+Respone code: 400
+Response body:
+{
+    "errorCode": "BAD_REQUEST",
+    "errorMsg": "Cannot make more than two reservations",
+    "status": 400,
+    "timestamp": "2020-10-03 03:14:05"
+}
+```
+#### Owner get list of all reservations
+   ##### Request
+   ```bash
+   HTTP Method: GET
+   URL: http://localhost:8088/reservation/v1/reservations?type=OWNER
+   ```
+   #### Response
+   ```bash
+   Respone code: 200
+   Response body:
+   [
+       {
+           "id": 1,
+           "customer_name": "Suhas",
+           "reservation_type": "OWNER",
+           "seats": [
+               {
+                   "table_id": "2",
+                   "seat_id": "1"
+               }
+           ]
+       },
+       {
+           "id": 2,
+           "customer_name": "Andrew",
+           "reservation_type": "CUSTOMER",
+           "seats": [
+               {
+                   "table_id": "1",
+                   "seat_id": "1"
+               }
+           ]
+       },
+       {
+           "id": 3,
+           "customer_name": "Andrew",
+           "reservation_type": "CUSTOMER",
+           "seats": [
+               {
+                   "table_id": "3",
+                   "seat_id": "1"
+               },
+               {
+                   "table_id": "3",
+                   "seat_id": "2"
+               },
+               {
+                   "table_id": "3",
+                   "seat_id": "3"
+               }
+           ]
+       }
+   ]
+```
+#### Customer get list of own reservations
+##### Request
+```bash
+HTTP Method: GET
+URL: http://localhost:8088/reservation/v1/reservations?type=CUSTOMER&name=Andrew
 ```
 #### Response
 ```bash
 Respone code: 200
+Response body:
+[
+    {
+        "id": 1,
+        "customer_name": "Andrew",
+        "reservation_type": "CUSTOMER",
+        "seats": [
+            {
+                "table_id": "1",
+                "seat_id": "1"
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "customer_name": "Andrew",
+        "reservation_type": "CUSTOMER",
+        "seats": [
+            {
+                "table_id": "3",
+                "seat_id": "1"
+            },
+            {
+                "table_id": "3",
+                "seat_id": "2"
+            },
+            {
+                "table_id": "3",
+                "seat_id": "3"
+            }
+        ]
+    }
+]
 ```
-#### Try to cancel a reservation doesn't exist
+#### Try to cancel a reservation doesn't exist will fail
 ##### Request
 ```bash
 HTTP Method: DELETE
