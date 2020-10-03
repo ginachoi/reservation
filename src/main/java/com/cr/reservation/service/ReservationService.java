@@ -99,6 +99,18 @@ public class ReservationService {
     return convertToReservationResponseDTOS(reservations);
   }
 
+  public boolean cancelReservation(int reservationId) {
+    Optional<Reservation> reservation = this.reservationRepository.findById(reservationId);
+    if(!reservation.isPresent()) {
+      String msg = String.format("Reservation with ID '%s' does not exist", reservationId);
+      log.error(msg);
+      throw new IllegalArgumentException(msg);
+    }
+    Reservation found = reservation.get();
+    this.reservationRepository.delete(found);
+    return true;
+  }
+
   private List<ReservationResponseDTO> convertToReservationResponseDTOS(
       List<Reservation> reservations) {
     List<ReservationResponseDTO> responseDTOS = new ArrayList<>();

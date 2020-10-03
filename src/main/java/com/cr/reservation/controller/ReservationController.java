@@ -12,7 +12,9 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,6 +45,7 @@ public class ReservationController {
   @ResponseStatus(HttpStatus.CREATED)
   public List<ReservationResponseDTO> makeReservations(
       @RequestBody ReservationRequest reservationRequest) {
+    log.debug("making reservations");
     log.debug("customer name=\"{}\"", reservationRequest.getCutomerName());
     log.debug("reservation type=\"{}\"", reservationRequest.getReservationType());
     log.debug("reservation count=\"{}\"", reservationRequest.getReservations().size());
@@ -57,5 +60,13 @@ public class ReservationController {
     log.debug("reservation type=\"{}\"", reservationType);
     log.debug("customer is-present=\"{}\"", customerName.isPresent());
     return this.reservationService.getReservations(reservationType, customerName);
+  }
+
+  @DeleteMapping(path = "/reservations/{id}")
+  @ResponseStatus(HttpStatus.OK)
+  public boolean cancelReservation(
+      @PathVariable("id") int reservationId) {
+    log.debug("canceling a reservation with reservation-ID=\"{}\"", reservationId);
+    return this.reservationService.cancelReservation(reservationId);
   }
 }
