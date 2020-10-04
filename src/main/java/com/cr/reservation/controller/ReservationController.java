@@ -2,11 +2,13 @@ package com.cr.reservation.controller;
 
 import com.cr.reservation.model.ReservationType;
 import com.cr.reservation.service.ReservationService;
+import com.cr.reservation.web.CancelRequest;
 import com.cr.reservation.web.ReservationRequest;
 import com.cr.reservation.web.ReservationResponseDTO;
 import com.cr.reservation.web.TableSeatResponseDTO;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,7 +47,7 @@ public class ReservationController {
   public List<ReservationResponseDTO> makeReservations(
       @RequestBody ReservationRequest reservationRequest) {
     log.debug("making reservations");
-    log.debug("customer name=\"{}\"", reservationRequest.getCutomerName());
+    log.debug("customer name=\"{}\"", reservationRequest.getCustomerName());
     log.debug("reservation type=\"{}\"", reservationRequest.getReservationType());
     log.debug("reservation count=\"{}\"", reservationRequest.getReservations().size());
     return this.reservationService.makeReservations(reservationRequest);
@@ -62,11 +63,13 @@ public class ReservationController {
     return this.reservationService.getReservations(reservationType, customerName);
   }
 
-  @DeleteMapping(path = "/reservations/{id}")
-  @ResponseStatus(HttpStatus.OK)
-  public boolean cancelReservation(
-      @PathVariable("id") int reservationId) {
-    log.debug("canceling a reservation with reservation-ID=\"{}\"", reservationId);
-    return this.reservationService.cancelReservation(reservationId);
+  @DeleteMapping(path = "/reservations")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void cancelReservations(
+      @RequestBody CancelRequest cancelRequest) {
+    log.debug("canceling reservations with reservation-ID=\"{}\"", String
+        .join(", ", cancelRequest.getReservations().stream().map(i -> String.valueOf(i)).collect(
+            Collectors.toList())));
+    this.reservationService.cancelReservations(cancelRequest);
   }
 }

@@ -1,10 +1,12 @@
 package com.cr.reservation.service;
 
+import com.cr.reservation.exception.UnAuthorizedException;
 import com.cr.reservation.model.Reservation;
 import com.cr.reservation.model.ReservationType;
 import com.cr.reservation.model.TableSeat;
 import com.cr.reservation.repository.ReservationRepository;
 import com.cr.reservation.repository.TableSeatRepository;
+import com.cr.reservation.web.CancelRequest;
 import com.cr.reservation.web.ReservationRequest;
 import com.cr.reservation.web.ReservationResponseDTO;
 import com.cr.reservation.web.SeatDTO;
@@ -58,7 +60,7 @@ public class ReservationService {
     log.debug("number of empty seats is {}", seats.size());
     Map<String, List<TableSeat>> totalSeatsByTable = seats.stream()
         .collect(Collectors.groupingBy(TableSeat::getTableId));
-    String customerName = reservationRequest.getCutomerName();
+    String customerName = reservationRequest.getCustomerName();
     ReservationType reservationType = reservationRequest.getReservationType();
     List<Reservation> reservations = new ArrayList<>();
     for (List<TableSeatDTO> list : reservationRequest.getReservations()) {
@@ -99,17 +101,56 @@ public class ReservationService {
     return convertToReservationResponseDTOS(reservations);
   }
 
-  public boolean cancelReservation(int reservationId) {
-    Optional<Reservation> reservation = this.reservationRepository.findById(reservationId);
-    if(!reservation.isPresent()) {
+  public void cancelReservations(CancelRequest cancelRequest) {
+    List<Reservation> reservations = new ArrayList<>();
+    for (Integer reservationId : cancelRequest.getReservations()) {
+      Optional<Reservation> reservation = this.reservationRepository.findById(reservationId);
+      checkReservationExist(reservationId, reservation);
+      reservations.add(reservation.get());
+    }
+    ReservationType type = cancelRequest.getReservationType();
+    String customerName = cancelRequest.getCustomerName();
+    // The owner can delete any reservations
+    if (ReservationType.OWNER.equals(cancelRequest.getReservationType())) {
+      deleteReservations(reservations);
+    } else if (ReservationType.CUSTOMER.equals(type)) {
+      // Customers can delete only their own reservations
+      checkAuthorizationForReservations(reservations, customerName);
+      deleteReservations(reservations);
+    }
+  }
+
+  private void deleteReservations(List<Reservation> reservations) {
+    for (Reservation r : reservations) {
+      for (TableSeat ts : r.getGuests()) {
+        ts.setBooked(false);
+        this.tableSeatRepository.save(ts);
+      }
+      this.reservationRepository.delete(r);
+    }
+  }
+
+
+  private void checkReservationExist(int reservationId, Optional<Reservation> reservation) {
+    if (!reservation.isPresent()) {
       String msg = String.format("Reservation with ID '%s' does not exist", reservationId);
       log.error(msg);
       throw new IllegalArgumentException(msg);
     }
-    Reservation found = reservation.get();
-    this.reservationRepository.delete(found);
-    return true;
   }
+
+  private void checkAuthorizationForReservations(List<Reservation> reservations,
+      String customerName) {
+    for (Reservation r : reservations) {
+      if (!r.getCustomerName().equals(customerName)) {
+        log.error(String
+            .format("Customer with name '%s' try to cancel a reservation made by customer '%s'",
+                customerName, r.getCustomerName()));
+        throw new UnAuthorizedException("Not authorized");
+      }
+    }
+  }
+
 
   private List<ReservationResponseDTO> convertToReservationResponseDTOS(
       List<Reservation> reservations) {
@@ -155,7 +196,7 @@ public class ReservationService {
     }
     for (List<TableSeatDTO> list : reservationRequest.getReservations()) {
       if (list.size() > 10) {
-        String msg = "Cannot accept more than 10 people per single reservation";
+        String msg = "Cannot reserve more than 10 people per single reservation";
         log.error(msg);
         throw new IllegalArgumentException(msg);
       }

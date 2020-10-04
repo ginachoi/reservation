@@ -347,7 +347,15 @@ Response body:
 ##### Request
 ```bash
 HTTP Method: DELETE
-URL: http://localhost:8088/reservation/v1/reservations/3
+URL: http://localhost:8088/reservation/v1/reservations
+Request body:
+{
+   "customer_name":"Suhas",
+   "reservation_type":"CUSTOMER",
+   "ids":[
+      6
+   ]
+}
 ```
 #### Response
 ```bash
@@ -355,10 +363,53 @@ Respone code: 400
 Response body:
 {
     "errorCode": "BAD_REQUEST",
-    "errorMsg": "Reservation with ID '3' does not exist",
+    "errorMsg": "Reservation with ID '6' does not exist",
     "status": 400,
-    "timestamp": "2020-10-03 02:40:26"
+    "timestamp": "2020-10-04 03:09:18"
 }
+```
+#### Try to cancel someone else's reservations
+##### Request
+```bash
+HTTP Method: DELETE
+URL: http://localhost:8088/reservation/v1/reservations
+Request body:
+{
+   "customer_name":"Gina",
+   "reservation_type":"CUSTOMER",
+   "ids":[
+      1
+   ]
+}
+```
+#### Response
+```bash
+Respone code: 401
+Response body:
+{
+    "errorCode": "UNAUTHORIZED",
+    "errorMsg": "Not authorized",
+    "status": 401,
+    "timestamp": "2020-10-04 03:06:57"
+}
+```
+#### Customer cancel their own reservations
+##### Request
+```bash
+HTTP Method: DELETE
+URL: http://localhost:8088/reservation/v1/reservations
+Request body:
+{
+   "customer_name":"Suhas",
+   "reservation_type":"CUSTOMER",
+   "ids":[
+      1
+   ]
+}
+```
+#### Response
+```bash
+Respone code: 204
 ```
 ### Additional Links
 These additional references should also help you:

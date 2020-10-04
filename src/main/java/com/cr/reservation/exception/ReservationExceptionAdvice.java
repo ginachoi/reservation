@@ -16,11 +16,19 @@ public class ReservationExceptionAdvice {
 
 
   @ExceptionHandler(value = Exception.class)
-  public ResponseEntity<ErrorResponse> handleGenericNotFoundException(Exception e) {
+  public ResponseEntity<ErrorResponse> handleGenericException(Exception e) {
     ErrorResponse error = new ErrorResponse("INTERNAL_SERVER_ERROR", e.getMessage());
     error.setTimestamp(LocalDateTime.now());
     error.setStatus((HttpStatus.INTERNAL_SERVER_ERROR.value()));
     return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+  }
+
+  @ExceptionHandler(value = UnAuthorizedException.class)
+  public ResponseEntity<ErrorResponse> handleUnAuthorizedException(UnAuthorizedException e) {
+    ErrorResponse error = new ErrorResponse("UNAUTHORIZED", e.getMessage());
+    error.setTimestamp(LocalDateTime.now());
+    error.setStatus((HttpStatus.UNAUTHORIZED.value()));
+    return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
   }
 
   @ExceptionHandler(value = IllegalArgumentException.class)
