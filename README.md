@@ -21,7 +21,7 @@ The owner can cancel any reservations but customers can cancel only their own re
 ##### Request
 ```bash
 HTTP Method: GET
-URL: http://localhost:8088/reservation/v1/tables
+URL: http://krchoi.com:8088/reservation/v1/tables
 ```
 #### Response
 ```bash
@@ -94,7 +94,7 @@ Response body:
 ##### Request
 ```bash
 HTTP Method: POST
-URL: http://localhost:8088/reservation/v1/reservations
+URL: http://krchoi.com:8088/reservation/v1/reservations
 Request body:
 {
    "customer_name":"Suhas",
@@ -131,7 +131,7 @@ Response body:
 ##### Request
 ```bash
 HTTP Method: POST
-URL: http://localhost:8088/reservation/v1/reservations
+URL: http://krchoi.com:8088/reservation/v1/reservations
 Request body:
 {
    "customer_name":"Andrew",
@@ -201,7 +201,7 @@ Response body:
 ##### Request
 ```bash
 HTTP Method: POST
-URL: http:http://localhost:8088/reservation/v1/reservations
+URL: http:http://krchoi.com:8088/reservation/v1/reservations
 Request body:
 {
    "customer_name":"Suhas",
@@ -243,7 +243,7 @@ Response body:
 ##### Request
 ```bash
 HTTP Method: POST
-URL: http:http://localhost:8088/reservation/v1/reservations
+URL: http:http://krchoi.com:8088/reservation/v1/reservations
 Request body:
 {
    "customer_name":"Felix",
@@ -313,7 +313,7 @@ Response body:
    ##### Request
    ```bash
    HTTP Method: GET
-   URL: http://localhost:8088/reservation/v1/reservations?type=OWNER
+   URL: http://krchoi.com:8088/reservation/v1/reservations?type=OWNER
    ```
    #### Response
    ```bash
@@ -367,7 +367,7 @@ Response body:
 ##### Request
 ```bash
 HTTP Method: GET
-URL: http://localhost:8088/reservation/v1/reservations?type=CUSTOMER&name=Andrew
+URL: http://krchoi.com:8088/reservation/v1/reservations?type=CUSTOMER&name=Andrew
 ```
 #### Response
 ```bash
@@ -410,7 +410,7 @@ Response body:
 ##### Request
 ```bash
 HTTP Method: DELETE
-URL: http://localhost:8088/reservation/v1/reservations
+URL: http://krchoi.com:8088/reservation/v1/reservations
 Request body:
 {
    "customer_name":"Suhas",
@@ -435,7 +435,7 @@ Response body:
 ##### Request
 ```bash
 HTTP Method: DELETE
-URL: http://localhost:8088/reservation/v1/reservations
+URL: http://krchoi.com:8088/reservation/v1/reservations
 Request body:
 {
    "customer_name":"Gina",
@@ -460,7 +460,7 @@ Response body:
 ##### Request
 ```bash
 HTTP Method: DELETE
-URL: http://localhost:8088/reservation/v1/reservations
+URL: http://krchoi.com:8088/reservation/v1/reservations
 Request body:
 {
    "customer_name":"Suhas",
@@ -478,7 +478,7 @@ Respone code: 204
 ##### Request
 ```bash
 HTTP Method: DELETE
-URL: http://localhost:8088/reservation/v1/reservations
+URL: http://krchoi.com:8088/reservation/v1/reservations
 Request body:
 {
    "customer_name":"Andrew",
@@ -498,4 +498,4 @@ The Reservation Service is deployed in a AWS EC2 instance.
 
 ### H2 Console
 
-* [H2 console login URL](http://localhost:8088/h2-console)
+* [H2 console login URL](http://krchoi.com:8088/h2-console)
