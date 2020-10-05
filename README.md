@@ -16,8 +16,6 @@ The owner can view all reservation but customers can view only their own reserva
 The owner can cancel any reservations but customers can cancel only their own reservations.
 
 
-
-
 ### REST APIs
 #### Get status of seats for all tables in the restaurants
 ##### Request
@@ -495,8 +493,9 @@ Request body:
 ```bash
 Respone code: 204
 ```
-### Additional Links
-These additional references should also help you:
+### AWS Deployment
+The Reservation Service is deployed in a AWS EC2 instance.
 
-* [Gradle Build Scans – insights for your project's build](https://scans.gradle.com#gradle)
+### H2 Console
 
+* [H2 console login URL](http://localhost:8088/h2-console)
