@@ -194,16 +194,14 @@ public class ReservationService {
     if (reservationRequest.getReservations().size() > 2) {
       throw new IllegalArgumentException("Cannot make more than two reservations");
     }
-    for (List<TableSeatDTO> list : reservationRequest.getReservations()) {
-      if (list.size() > 10) {
-        String msg = "Cannot reserve more than 10 people per single reservation";
-        log.error(msg);
-        throw new IllegalArgumentException(msg);
-      }
-    }
     int totalSeatRequested = reservationRequest.getReservations().stream()
         .flatMap(List::stream)
         .collect(Collectors.toList()).size();
+    if (totalSeatRequested > 10) {
+      String msg = "Cannot reserve more than 10 people per single reservation";
+      log.error(msg);
+      throw new IllegalArgumentException(msg);
+    }
     log.debug("total seat count=\"{}\"", totalSeatRequested);
     if (totalSeatRequested > numEmptySeats) {
       throw new IllegalArgumentException("Not enough seats available");

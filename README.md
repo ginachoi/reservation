@@ -1,30 +1,25 @@
 # ReservationService
-The reservation service helps both owner and customer to make reservations.
-* A restaurant has 4 tables of capacity 1,2,3 and 4 seats
-* Two reservations can be made at the same time of multiple seating capacities. Cannot make more than two reservations.
-* No single reservation can be greater than 10 people
-* No waitlist - successful reservation or failed reservation are the only 2 states possible
-* Customer and Owner are the only 2 people who will use this API
-* Both customer and owner can make/cancel a reservation.
+The reservation service helps both owner and customer to make, view and cancel reservations.
 
-- Create 3 REST APIs
-- As a User (customer or owner), I want to make a reservation
-- As a User, I want to cancel a reservation
-- As a User, at any given point, I want to check which tables are free and of what
+### Use Cases
+#### List table-seat status
+Both owner and customer can view status for all seats in all tables to make reservations.
+
+#### Make reservations
+The owner can make reservations on behalf of customers and customers also can make their own 
+reservation.
+
+#### View reservations
+The owner can view all reservation but customers can view only their own reservations.
+
+#### Cancel reservations
+The owner can cancel any reservations but customers can cancel only their own reservations.
 
 
-
-### Use Case
-* Either customers and owner make a query to get a list of table status
-* Both customer and owner can make reservations
-* Customer can view reservations that he/she made. Owner can view the entire reservations
-* Both customer and owner can cancel reservations. Customers only cancel own reservations
-* Owner can cancel any reservations
-* Both owner and user can cancel one reservation at a time
 
 
 ### REST APIs
-#### Get status of seats in the restaurants
+#### Get status of seats for all tables in the restaurants
 ##### Request
 ```bash
 HTTP Method: GET
@@ -97,7 +92,7 @@ Response body:
     }
 ]
 ```
-#### Owner make reservations
+#### Owner make reservations for a customer
 ##### Request
 ```bash
 HTTP Method: POST
@@ -246,7 +241,77 @@ Response body:
     "timestamp": "2020-10-03 03:14:05"
 }
 ```
-#### Owner get list of all reservations
+#### Try to make a reservation for more than 10 people will fail
+##### Request
+```bash
+HTTP Method: POST
+URL: http:http://localhost:8088/reservation/v1/reservations
+Request body:
+{
+   "customer_name":"Felix",
+   "reservation_type":"CUSTOMER",
+   "reservations":[
+      [
+         {
+            "table_id":"1",
+            "seat_id":"1"
+         },
+         {
+            "table_id":"2",
+            "seat_id":"1"
+         },
+         {
+            "table_id":"2",
+            "seat_id":"2"
+         },         
+         {
+            "table_id":"3",
+            "seat_id":"1"
+         },
+         {
+            "table_id":"3",
+            "seat_id":"2"
+         },
+         {
+            "table_id":"3",
+            "seat_id":"3"
+         },
+         {
+            "table_id":"4",
+            "seat_id":"1"
+         },
+         {
+            "table_id":"4",
+            "seat_id":"2"
+         },
+         {
+            "table_id":"4",
+            "seat_id":"3"
+         },
+         {
+            "table_id":"4",
+            "seat_id":"4"
+         },
+         {
+            "table_id":"5",
+            "seat_id":"1"
+         }
+      ]
+   ]
+}
+```
+#### Response
+```bash
+Respone code: 400
+Response body:
+{
+    "errorCode": "BAD_REQUEST",
+    "errorMsg": "Cannot reserve more than 10 people per single reservation",
+    "status": 400,
+    "timestamp": "2020-10-04 08:43:10"
+}
+```
+#### Owner query all reservations
    ##### Request
    ```bash
    HTTP Method: GET
@@ -300,7 +365,7 @@ Response body:
        }
    ]
 ```
-#### Customer get list of own reservations
+#### Customers query their own reservations
 ##### Request
 ```bash
 HTTP Method: GET
@@ -368,7 +433,7 @@ Response body:
     "timestamp": "2020-10-04 03:09:18"
 }
 ```
-#### Try to cancel someone else's reservations
+#### Try to cancel someone else's reservations will fail
 ##### Request
 ```bash
 HTTP Method: DELETE
@@ -404,6 +469,25 @@ Request body:
    "reservation_type":"CUSTOMER",
    "ids":[
       1
+   ]
+}
+```
+#### Response
+```bash
+Respone code: 204
+```
+#### Owner cancel reservations on behalf of customers
+##### Request
+```bash
+HTTP Method: DELETE
+URL: http://localhost:8088/reservation/v1/reservations
+Request body:
+{
+   "customer_name":"Andrew",
+   "reservation_type":"OWNER",
+   "ids":[
+      4,
+      5
    ]
 }
 ```
